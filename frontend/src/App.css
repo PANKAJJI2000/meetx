@@ -1,0 +1,45 @@
+.landingPageContainer{
+    width: 100vw;
+    height: 100vh;
+    background: url("/background.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.landingPageContainer nav{
+    padding-inline: 1.2rem;
+    padding-block: 1.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+.navList{
+    display: flex;
+    gap: 1.6rem;
+    cursor: pointer;
+}
+.landingMainContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 2rem;
+    padding-block: 1.2rem;
+}
+.landingMainContainer .mainContentImg img{
+    height: 70vh;
+    width: auto;
+}
+.landingMainContainer .mainContent .getStartedbtn{
+    background-color: #d97500 ;
+   
+    margin-top: 1.4rem;
+    padding: 0.5rem;
+    width: fit-content;
+    border-radius: 7px;
+}
+.landingMainContainer .mainContent .getStartedbtn a{
+    color: white;
+    text-decoration: none;
+    font-family: sans-serif;
+}
