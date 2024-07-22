@@ -25,10 +25,12 @@
     align-items: center;
     padding-inline: 2rem;
     padding-block: 1.2rem;
+    
 }
 .landingMainContainer .mainContentImg img{
     height: 70vh;
     width: auto;
+    
 }
 .landingMainContainer .mainContent .getStartedbtn{
     background-color: #d97500 ;
@@ -43,3 +45,44 @@
     text-decoration: none;
     font-family: sans-serif;
 }
+
+.navBar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: 20px;
+    color: black;
+    
+} 
+
+.meetContainer {
+    display: flex;
+    padding-inline: 20px;
+    height: 80vh;
+    gap: 10vw;
+    justify-content: center;
+  }
+  
+
+
+
+.leftPanel {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+.rightPanel {
+  display: flex;
+  align-items: center;
+}
+
+.rightPanel > img {
+  width: 30vw;
+  height: auto;
+  border-radius: 20px;
+}
+
+
+

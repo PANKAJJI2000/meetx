@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthContext } from '../contexts/Authentication';
+import { AuthContext } from '../contexts/AuthContext';
 import { Snackbar } from '@mui/material';
 
 
@@ -40,15 +40,18 @@ export default function Authentication() {
     try {
       if(formState == 1){
         let result = await handleRegister(name,username,password);
-        
+        setUsername("");
         setMessages(result);
         setOpen(true);
+        setError("")
+        setFormState(0)
+        setPassword("")
       }
       if(formState == 0){
-         
+         let result = await handleLogIn(username,password)
       }
     } catch(error) {
-      console.log(error);
+      
       let message = error.response.data.message;
       setError(message);
     }
@@ -99,7 +102,7 @@ export default function Authentication() {
             
 
             <Box component="form" noValidate sx={{ mt: 1 }}>
-              {formState == 1 ?
+              {formState == 1 ? //form state 1 is for signup and 0 is for login
                 <TextField
                   margin="normal"
                   required
@@ -107,7 +110,7 @@ export default function Authentication() {
                   id="fullname"
                   label="Fullname"
                   name="fullname"
-
+                  value={name}
                   autoFocus
                   onChange={(e)=>{
                     setName(e.target.value)
@@ -122,6 +125,7 @@ export default function Authentication() {
                 id="username"
                 label="Username"
                 name="username"
+                value={username}
                 autoFocus
                 onChange={(e)=>{
                   setUsername(e.target.value)
@@ -135,6 +139,7 @@ export default function Authentication() {
                 label="Password"
                 type="password"
                 id="password"
+                value={password}
                 onChange={(e)=>{
                   setPassword(e.target.value)
                 }}

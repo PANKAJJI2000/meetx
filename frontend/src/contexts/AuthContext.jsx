@@ -16,7 +16,7 @@ export const AuthProvider = ({children}) => {
         try {
             let request = await client.post("/signUp" ,{
                 name:name,
-                usernmae:username,
+                username:username,
                 password:password,
             });
             if(request.status == httpStatus.CREATED){
@@ -35,15 +35,44 @@ export const AuthProvider = ({children}) => {
             });
             if(request.status == httpStatus.OK){
                 localStorage.setItem("token",request.data.token);
+                router("/home")
             }
         } catch (error) {
             throw error;
         }
     }
+
+
+
+    const getHistoryOfUser = async()=>{
+        try {
+            let request = await client.get("/get_all_activity",{
+                params:{
+                    token:localStorage.getItem("token"),
+
+                }
+            });
+            return request.data;
+        } catch (e) {
+            throw e;
+        }
+    }
     
 
+    const addToUserHistory = async(meetingCode) =>{
+        try {
+            let request = await client.post("/add_to_activity",{
+                token:localStorage.getItem("token"),
+                meeting_code: meetingCode
+            });
+            return request;
+        } catch (e) {
+            throw e;
+        }
+    }
+ 
     const data = {
-        userData ,setUserData,handleRegister
+        userData ,setUserData,getHistoryOfUser,addToUserHistory,handleRegister,handleLogIn
     }
     return (
         <AuthContext.Provider value={data}>

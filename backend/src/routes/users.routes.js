@@ -1,5 +1,5 @@
 import express from 'express';
-import { logIn ,signUp} from '../controllers/user.js';
+import { logIn ,signUp ,addToUserHistory ,getUserHistory} from '../controllers/user.js';
 
 const router = express.Router();
 
@@ -11,4 +11,14 @@ router
 router
 .route("/login")
 .post(logIn)
+
+router
+.route("/add_to_activity")
+.post(addToUserHistory)
+
+router
+.route("/get_all_activity")
+.get(getUserHistory)
+
+
 export default router;

@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import { User } from '../models/users.js';
 import bcrypt, { hash } from "bcrypt";
 import crypto from 'crypto';
+import { Meeting } from '../models/meeting.js';
 
 
 const logIn = async (req, res) => {
@@ -14,12 +15,16 @@ const logIn = async (req, res) => {
         if (!user) {
             return res.status(httpStatus.NOT_FOUND).json({ message: "User not Found" });
         }
-        if (bcrypt.compare(password, user.password)) {
+        let isPasswordCorrect = await bcrypt.compare(password, user.password)
+        if (isPasswordCorrect) {
             let token = crypto.randomBytes(20).toString("hex");
 
             user.token = token;
             await user.save();
             res.status(httpStatus.OK).json({ token: token });
+        }
+        else{
+            return res.status(httpStatus.UNAUTHORIZED).json({message:"Wrong Password"})
         }
 
     } catch (error) {
@@ -38,18 +43,50 @@ const signUp = async (req, res) => {
             return res.status(httpStatus.FOUND).json({ message: "User already exists." });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        
         const newUser = new User({
             name: name,
             username: username,
             password: hashedPassword,
         });
-
+       
         await newUser.save();
+        
         res.status(httpStatus.CREATED).json({ message: "Account Created SuccessFully." })
     } catch (error) {
         res.json({ message: `Something went wrong ${error.message}` });
     }
 }
 
-export {logIn , signUp};
+
+
+const getUserHistory = async (req,res) => {
+    const {token} = req.query;
+    try {
+        const user = await User.findOne({token:token});
+        const meetings = await Meeting.findOne({user_id:user.username})
+        res.json(meetings);
+
+    } catch (e) {
+        res.json({message: `something went wrong ${e}`})
+    }
+}
+
+
+const addToUserHistory = async (req,res) =>{
+    const {token ,meeting_Code} = req.body;
+    try {
+        const user = await User.findOne({token:token});
+        const newMeeting = new Meeting({
+            user_id:user.username,
+            meetingCode:meeting_Code,
+        })
+
+        await newMeeting.save();
+        res.status(httpStatus.CREATED).JSON({message:"Added Code to History"})
+    } catch (e) {
+        res.json({message: `something went wrong ${e}`})
+    } 
+}
+
+export {logIn , signUp,getUserHistory,addToUserHistory};
