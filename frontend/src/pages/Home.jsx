@@ -39,7 +39,7 @@ function HomeComponent() {
         <div className="homepage" > 
             <div className="navBar">
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <h2> Desi Talks  <IconButton disabled>
+                    <h2> Meet X  <IconButton disabled>
                          <VideoChatIcon/>
                         </IconButton> 
                         <span style={{color:"Orange"}}>Connect Now</span></h2>

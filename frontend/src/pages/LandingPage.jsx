@@ -34,7 +34,7 @@ export default function Landingpage() {
                 <div className="mainContent">
                     <h1 style={{ color: "white" }}><span style={{ color: "#FF9839" }}>Connect</span> With your</h1>
                     <h1 style={{ color: "white" }}>Loved Ones</h1>
-                    <p>Cover a distance by Desi Talks</p>
+                    <p>Cover a distance by Meet X</p>
                     <div role="button" className="getStartedbtn">
                         <Link to={"/auth"} >Get started</Link>
                     </div>
