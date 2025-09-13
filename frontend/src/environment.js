@@ -1,9 +1,9 @@
 let IS_PROD = true;
 
 
-const server = {
-    prod: IS_PROD ? "https://desi-talks.onrender.com" : "http://localhost:5000",
-    dev: "http://localhost:5000"
-};
+const server = IS_PROD ? "https://vcbackend-ltz5.onrender.com":
+    "https://localhost:3000"
+    
+
 
 export default server;

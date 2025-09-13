@@ -9,7 +9,7 @@ export const AuthContext = createContext({});
 
 const client = axios.create({
     baseURL:`${server.prod}/api/v1/users`
-});
+})
 
 export const AuthProvider = ({children}) => {
     const authContext = useContext(AuthContext);
