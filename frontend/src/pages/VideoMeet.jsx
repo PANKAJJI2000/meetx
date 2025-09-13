@@ -14,7 +14,9 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
 import server from "../environment";
 
-const server_url = server;
+
+
+const server_url = server.prod === "" ? window.location.origin : server.prod;
 var connections = {};
 
 const peerConfigConnections = {
@@ -160,13 +162,12 @@ export default function VideoMeet() {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
                 .then(getUserMediaSuccess)
-                .then((stream) => { })
                 .catch((e) => console.log(e))
         } else {
             try {
                 let tracks = localVideoRef.current.srcObject.getTracks()
                 tracks.forEach(track => track.stop())
-            } catch (e) { }
+            } catch (e) { console.log('Error stopping tracks:', e) }
         }
     }
 
@@ -271,7 +272,9 @@ export default function VideoMeet() {
 
                         try {
                             connections[id2].addStream(window.localStream)
-                        } catch (e) { }
+                        } catch (e) { 
+                            console.log('Error adding stream:', e)
+                        }
 
                         connections[id2].createOffer().then((description) => {
                             connections[id2].setLocalDescription(description)
@@ -386,7 +389,6 @@ export default function VideoMeet() {
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
-                    .then((stream) => { })
                     .catch((e) => console.log(e))
             }
         }
@@ -420,7 +422,7 @@ export default function VideoMeet() {
             let tracks = localVideoRef.current.srcObject.getTracks();
             tracks.forEach(track => track.stop())
         } catch (e) {
-            
+            console.log('Error stopping tracks:', e);
         }
 
         routeTo("/home");
