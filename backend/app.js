@@ -37,7 +37,7 @@ app.use("/api/v1/users",userRouter);
 
 //server starting and database connection
 const start = async () =>{
-    const connectionDb = await mongoose.connect("mongodb+srv://Ashu_videoCall:Ashu0432@cluster0.omojqph.mongodb.net/")
+    const connectionDb = await mongoose.connect("mongodb+srv://desitalk:SUe4kxJxfvp9yjxj@cluster0.cccse2x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     console.log(`Mongo connected Db host: ${connectionDb.connection.host}`);
     server.listen(app.get("port"), () => {
         console.log("Listening on port 3000");

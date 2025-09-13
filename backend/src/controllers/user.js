@@ -62,31 +62,63 @@ const signUp = async (req, res) => {
 
 const getUserHistory = async (req,res) => {
     const {token} = req.query;
+    console.log('getUserHistory called with token:', token);
+    
     try {
-        const user = await User.findOne({token:token});
-        const meetings = await Meeting.findOne({user_id:user.username})
-        res.json(meetings);
+        if (!token) {
+            console.log('No token provided');
+            return res.status(400).json({message: "Token is required"});
+        }
 
+        const user = await User.findOne({token:token});
+        console.log('User found:', user ? user.username : 'No user found');
+        
+        if (!user) {
+            console.log('User not found for token:', token);
+            return res.status(404).json({message: "User not found"});
+        }
+        
+        const meetings = await Meeting.find({user_id:user.username});
+        console.log('Found meetings for user:', user.username, 'Count:', meetings.length, 'Data:', meetings);
+        
+        res.json(meetings);
     } catch (e) {
-        res.json({message: `something went wrong ${e}`})
+        console.error('Error in getUserHistory:', e);
+        res.status(500).json({message: `something went wrong ${e.message}`})
     }
 }
 
-
 const addToUserHistory = async (req,res) =>{
-    const {token ,meeting_Code} = req.body;
+    const {token, meeting_code} = req.body;
+    console.log('addToUserHistory called with:', {token, meeting_code});
+    
     try {
-        const user = await User.findOne({token:token});
-        const newMeeting = new Meeting({
-            user_id:user.username,
-            meetingCode:meeting_Code,
-        })
+        if (!token || !meeting_code) {
+            console.log('Missing required fields:', {token: !!token, meeting_code: !!meeting_code});
+            return res.status(400).json({message: "Token and meeting code are required"});
+        }
 
-        await newMeeting.save();
-        res.status(httpStatus.CREATED).JSON({message:"Added Code to History"})
+        const user = await User.findOne({token:token});
+        console.log('User found for addToHistory:', user ? user.username : 'No user found');
+        
+        if (!user) {
+            console.log('User not found for token:', token);
+            return res.status(404).json({message: "User not found"});
+        }
+        
+        const newMeeting = new Meeting({
+            user_id: user.username,
+            meeting_code: meeting_code,
+        });
+
+        const savedMeeting = await newMeeting.save();
+        console.log('Meeting saved successfully:', savedMeeting);
+        
+        res.status(httpStatus.CREATED).json({message:"Added Code to History", meeting: savedMeeting});
     } catch (e) {
-        res.json({message: `something went wrong ${e}`})
+        console.error('Error in addToUserHistory:', e);
+        res.status(500).json({message: `something went wrong ${e.message}`})
     } 
 }
 
-export {logIn , signUp,getUserHistory,addToUserHistory};
+export { logIn, signUp, getUserHistory, addToUserHistory };

@@ -6,36 +6,52 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import VideoChatIcon from '@mui/icons-material/VideoChat';
+
 function HomeComponent() {
-
-
     let navigate = useNavigate();
     const [meetingCode, setMeetingCode] = useState("");
-
+    const [isJoining, setIsJoining] = useState(false);
 
     const {addToUserHistory} = useContext(AuthContext)
+    
     let handleJoinVideoCall = async () => {
-        await addToUserHistory(meetingCode)
-        navigate(`/${meetingCode}`)
+        if (!meetingCode.trim()) {
+            alert('Please enter a meeting code');
+            return;
+        }
+
+        try {
+            setIsJoining(true);
+            console.log('Joining call with code:', meetingCode);
+            await addToUserHistory(meetingCode);
+            console.log('Successfully added to history, navigating...');
+            navigate(`/${meetingCode}`);
+        } catch (error) {
+            console.error('Error adding to history:', error);
+            alert('Failed to save meeting to history, but joining anyway');
+            navigate(`/${meetingCode}`);
+        } finally {
+            setIsJoining(false);
+        }
     }
+
     return (
         <div className="homepage" > 
             <div className="navBar">
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <h2> VC:  <IconButton disabled>
+                    <h2> Desi Talks  <IconButton disabled>
                          <VideoChatIcon/>
                         </IconButton> 
                         <span style={{color:"Orange"}}>Connect Now</span></h2>
                 </div>
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <IconButton disabled onClick={()=>{
+                    <IconButton onClick={()=>{
                         navigate("/history")
                     }}>
                         <RestoreIcon />
 
                     </IconButton>
-                    {/* <p>History</p> */}    
-                    <Button   variant="standard" onClick={() => {
+                    <Button variant="standard" onClick={() => {
                         localStorage.removeItem("token")
                         navigate("/auth")
                     }}>
@@ -50,9 +66,19 @@ function HomeComponent() {
                     <div>
                         <h2 style={{color:"black" }}>Providing Quality Video call Just Like Quality Education</h2>
                         <div style={{ display: "flex", gap: "10px" }}>
-                            <TextField  label="Meeting Code" onChange={e => setMeetingCode(e.target.value)} id="outlined-basic"></TextField>
-                            <Button onClick={handleJoinVideoCall} variant="contained">
-                                Join
+                            <TextField  
+                                label="Meeting Code" 
+                                value={meetingCode}
+                                onChange={e => setMeetingCode(e.target.value)} 
+                                id="outlined-basic"
+                                disabled={isJoining}
+                            />
+                            <Button 
+                                onClick={handleJoinVideoCall} 
+                                variant="contained"
+                                disabled={isJoining || !meetingCode.trim()}
+                            >
+                                {isJoining ? 'Joining...' : 'Join'}
                             </Button>
                         </div>
                     </div>

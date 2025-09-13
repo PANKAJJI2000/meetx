@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -16,7 +17,11 @@
     "@mui/material": "^5.16.0",
     "axios": "^1.7.2",
     "http-status": "^1.7.4",
+<<<<<<< HEAD
     "prop-types": "^15.8.1",
+=======
+    "nodemon": "^3.1.10",
+>>>>>>> 8a7f958 (ready for deployment)
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
@@ -33,3 +38,4 @@
     "vite": "^5.3.1"
   }
 }
+

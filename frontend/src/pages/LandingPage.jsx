@@ -12,8 +12,8 @@ export default function Landingpage() {
         <div className="landingPageContainer">
             <nav>
                 <div className="navHeader">
-                <h2> VC: 
-                        <span style={{color:"Orange"}}>Connect Now</span></h2>
+                <h2> Desi 
+                        <span style={{color:"Orange"}}> Talks</span></h2>
                 </div>
 
                 <div className="navList">
@@ -34,7 +34,7 @@ export default function Landingpage() {
                 <div className="mainContent">
                     <h1 style={{ color: "white" }}><span style={{ color: "#FF9839" }}>Connect</span> With your</h1>
                     <h1 style={{ color: "white" }}>Loved Ones</h1>
-                    <p>cover a distance by apna video call</p>
+                    <p>Cover a distance by Desi Talks</p>
                     <div role="button" className="getStartedbtn">
                         <Link to={"/auth"} >Get started</Link>
                     </div>
