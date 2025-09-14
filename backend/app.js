@@ -119,20 +119,4 @@ const start = async () => {
 }
 
 start();
-        console.log(`Server is running on port ${app.get("port")}`);
-        console.log(`API available at: http://localhost:${app.get("port")}/api/v1/users`);
-        
-        // Log registered routes for debugging
-        console.log('\nRegistered routes:');
-        app._router.stack.forEach(function(r){
-            if (r.route && r.route.path){
-                console.log(`${Object.keys(r.route.methods).join(',').toUpperCase()} ${r.route.path}`);
-            } else if (r.name === 'router') {
-                console.log(`Router middleware at ${r.regexp}`);
-            }
-        });
-    });
-}
-
-start();
 
