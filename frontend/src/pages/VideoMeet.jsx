@@ -14,15 +14,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
 import server from "../environment";
 
-<<<<<<< HEAD
-
-
 const server_url = server.prod === "" ? window.location.origin : server.prod;
 var connections = {};
-=======
-const server_url = server;
-let connections = {};
->>>>>>> 8a7f958 (ready for deployment)
 
 const peerConfigConnections = {
     "iceServers": [
@@ -174,26 +167,12 @@ export default function VideoMeet() {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
                 .then(getUserMediaSuccess)
-<<<<<<< HEAD
                 .catch((e) => console.log(e))
         } else {
             try {
                 let tracks = localVideoRef.current.srcObject.getTracks()
                 tracks.forEach(track => track.stop())
             } catch (e) { console.log('Error stopping tracks:', e) }
-=======
-                .then(() => { })
-                .catch((e) => console.log(e))
-        } else {
-            try {
-                if (localVideoRef.current && localVideoRef.current.srcObject) {
-                    let tracks = localVideoRef.current.srcObject.getTracks()
-                    tracks.forEach(track => track.stop())
-                }
-            } catch (e) { 
-                // Handle error if needed
-            }
->>>>>>> 8a7f958 (ready for deployment)
         }
     }
 
@@ -310,25 +289,10 @@ export default function VideoMeet() {
                         connections[socketListId].addStream(window.localStream)
                     }
 
-<<<<<<< HEAD
-                if (id === socketIdRef.current) {
-                    for (let id2 in connections) {
-                        if (id2 === socketIdRef.current) continue
-
-                        try {
-                            connections[id2].addStream(window.localStream)
-                        } catch (e) { 
-                            console.log('Error adding stream:', e)
-                        }
-
-                        connections[id2].createOffer().then((description) => {
-                            connections[id2].setLocalDescription(description)
-=======
                     // Only the newly joined user should create offers to existing users
                     if (id === socketIdRef.current) {
                         connections[socketListId].createOffer().then((description) => {
                             connections[socketListId].setLocalDescription(description)
->>>>>>> 8a7f958 (ready for deployment)
                                 .then(() => {
                                     socketRef.current.emit('signal', socketListId, JSON.stringify({ 'sdp': connections[socketListId].localDescription }))
                                 })
@@ -438,12 +402,7 @@ export default function VideoMeet() {
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
                     .then(getDislayMediaSuccess)
-<<<<<<< HEAD
                     .catch((e) => console.log(e))
-=======
-                    .then(() => {})
-                    .catch((e) => console.log(e));
->>>>>>> 8a7f958 (ready for deployment)
             }
         }
     }
@@ -463,7 +422,6 @@ export default function VideoMeet() {
     }
 
 
-<<<<<<< HEAD
     let sendMessage = () => {
         console.log(socketRef.current);
         socketRef.current.emit('chat-message', message, username)
@@ -479,26 +437,6 @@ export default function VideoMeet() {
             tracks.forEach(track => track.stop())
         } catch (e) {
             console.log('Error stopping tracks:', e);
-=======
-    const sendMessage = () => {
-        if (socketRef.current && message.trim()) {
-            socketRef.current.emit('chat-message', message, username);
-            // Add the message to local state immediately for better UX
-            addMessage(message, username, socketIdRef.current);
-            setMessage("");
->>>>>>> 8a7f958 (ready for deployment)
-        }
-    }
-
-
-    const handleEndCall = () => {
-        try {
-            if (localVideoRef.current && localVideoRef.current.srcObject) {
-                let tracks = localVideoRef.current.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
-            }
-        } catch (e) {
-            console.log(e);
         }
         navigate("/home");
     }

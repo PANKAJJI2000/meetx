@@ -1,4 +1,7 @@
 {
+  "engine": {
+    "node": "22.15.0"
+  },
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
@@ -17,11 +20,7 @@
     "@mui/material": "^5.16.0",
     "axios": "^1.7.2",
     "http-status": "^1.7.4",
-<<<<<<< HEAD
     "prop-types": "^15.8.1",
-=======
-    "nodemon": "^3.1.10",
->>>>>>> 8a7f958 (ready for deployment)
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",

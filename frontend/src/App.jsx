@@ -3,10 +3,9 @@ import './App.css'
 import Landingpage from './pages/LandingPage'
 import Authentication from './pages/Authentication';
 import { AuthProvider } from './contexts/AuthContext';
-import VideoMeet from './pages/VideoMeet';
-
-import HomeComponent from './pages/Home';
-import History from './pages/history';
+import VideoMeet from "./pages/VideoMeet";
+import HomeComponent from "./pages/Home";
+import History from "./pages/history";
 function App() {
   
 
@@ -32,3 +31,4 @@ function App() {
 }
 
 export default App;
+
