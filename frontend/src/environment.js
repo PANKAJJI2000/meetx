@@ -1,8 +1,7 @@
 const server = {
-    prod: 'https://vcbackend-cx24.onrender.com',
+    prod: 'https://meetx-1-en8z.onrender.com', // Your actual backend URL
     dev: 'http://localhost:3000'
 };
 
-const current = window.location.hostname === 'localhost' ? server.dev : server.prod;
-
-export default current;
+// Always use the backend URL, never the current domain
+export default server;

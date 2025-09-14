@@ -15,10 +15,27 @@ app.set("port",(process.env.PORT || 3000));
 const server = createServer(app);
 const io = connectToSocket(server);
 
+// Configure CORS properly
+app.use(cors({
+    origin: [
+        "https://meetx-1-en8z.onrender.com", // Your frontend domain
+        "http://localhost:3000",
+        "http://localhost:5173"
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-requested-with"]
+}));
 
-app.use(cors());
 app.use(express.json({limit:"40Kb"}));
 app.use(express.urlencoded({limit:"40kb" , extended:true}))
+
+// Add request logging middleware for debugging
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+    console.log('Request body:', req.body);
+    next();
+});
 
 // Add root route handler
 app.get("/", (req, res) => {
@@ -31,20 +48,61 @@ app.get("/", (req, res) => {
     });
 });
 
-
-
 //for user routes
-app.use("/api/v1/users",userRouter);
+console.log('Registering user router...');
+app.use("/api/v1/users", userRouter);
+console.log('User router registered successfully');
 
+// Add a test endpoint to verify API is working
+app.get("/api/test", (req, res) => {
+    res.json({ message: "API is working!", timestamp: new Date().toISOString() });
+});
 
+// Add error handling middleware (moved after routes)
+app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    res.status(500).json({ message: "Something went wrong!", error: err.message });
+});
 
+// Handle 404 for API routes (moved after routes)
+app.use("/api/*", (req, res) => {
+    console.log(`API 404: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ message: "API endpoint not found" });
+});
+
+// Add a catch-all route for debugging (moved to end)
+app.use("*", (req, res) => {
+    console.log(`Unmatched route: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({ 
+        message: "Route not found",
+        path: req.originalUrl,
+        method: req.method
+    });
+});
 
 //server starting and database connection
-const start = async () =>{
-    const connectionDb = await mongoose.connect("mongodb+srv://desitalk:SUe4kxJxfvp9yjxj@cluster0.cccse2x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-    console.log(`Mongo connected Db host: ${connectionDb.connection.host}`);
+const start = async () => {
+    try {
+        const connectionDb = await mongoose.connect("mongodb+srv://desitalk:SUe4kxJxfvp9yjxj@cluster0.cccse2x.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        console.log(`Mongo connected Db host: ${connectionDb.connection.host}`);
+    } catch (error) {
+        console.error("Database connection failed:", error);
+        // Continue without database for now
+    }
+    
     server.listen(app.get("port"), () => {
-        console.log("Listening on port 3000");
+        console.log(`Server is running on port ${app.get("port")}`);
+        console.log(`API available at: http://localhost:${app.get("port")}/api/v1/users`);
+        
+        // Log registered routes for debugging
+        console.log('\nRegistered routes:');
+        app._router.stack.forEach(function(r){
+            if (r.route && r.route.path){
+                console.log(`${Object.keys(r.route.methods).join(',').toUpperCase()} ${r.route.path}`);
+            } else if (r.name === 'router') {
+                console.log(`Router middleware at ${r.regexp}`);
+            }
+        });
     });
 }
 

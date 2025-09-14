@@ -8,7 +8,11 @@ import server from "../environment";
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    baseURL:`${server}/api/v1/users`
+    baseURL: `${server.prod}/api/v1/users`,
+    timeout: 10000, // 10 second timeout
+    headers: {
+        'Content-Type': 'application/json'
+    }
 })
 
 const AuthProvider = ({children}) => {
@@ -33,6 +37,7 @@ const AuthProvider = ({children}) => {
 
     const handleLogIn = async(username,password)=>{
         try {
+            console.log('Attempting login to:', `${server.prod}/api/v1/users/login`);
             let request = await client.post("/login" , {
                 username:username,
                 password:password,
@@ -44,6 +49,9 @@ const AuthProvider = ({children}) => {
             }
         } catch (error) {
             console.error('Login error:', error);
+            if (error.code === 'ERR_NETWORK') {
+                throw new Error('Unable to connect to server. Please check your internet connection.');
+            }
             throw error;
         }
     }

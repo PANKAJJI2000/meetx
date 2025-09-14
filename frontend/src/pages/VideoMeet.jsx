@@ -14,7 +14,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import { useNavigate } from 'react-router-dom';
 import server from "../environment";
 
-const server_url = server.prod === "" ? window.location.origin : server.prod;
+const server_url = server.prod;
 var connections = {};
 
 const peerConfigConnections = {
