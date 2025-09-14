@@ -20,12 +20,18 @@ app.use(cors());
 app.use(express.json({limit:"40Kb"}));
 app.use(express.urlencoded({limit:"40kb" , extended:true}))
 
+// Add root route handler
+app.get("/", (req, res) => {
+    res.status(200).json({
+        message: "Desi Talks API is running successfully!",
+        version: "1.0.0",
+        endpoints: {
+            users: "/api/v1/users"
+        }
+    });
+});
 
 
-
-
-//for main page route
-// app.use("/home",indexRouter);
 
 //for user routes
 app.use("/api/v1/users",userRouter);
