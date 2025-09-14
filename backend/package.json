@@ -13,6 +13,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "echo 'No build step required for Node.js'",
     "dev": "nodemon app.js",
     "start": "node app.js",
     "prod": "pm2 app.js"
@@ -20,5 +21,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Asirbad"
+  "description": "Asirbad",
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
 }

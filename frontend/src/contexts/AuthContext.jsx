@@ -11,29 +11,40 @@ const client = axios.create({
     baseURL:`${server}/api/v1/users`
 })
 
-export const AuthProvider = ({children}) => {
+const AuthProvider = ({children}) => {
     const authContext = useContext(AuthContext);
     const [userData,setUserData] = useState(authContext);
     const router = useNavigate();
     const handleRegister = async(name ,username,password) => {
-        let request = await client.post("/signUp" ,{
-            name:name,
-            username:username,
-            password:password,
-        });
-        if(request.status == httpStatus.CREATED){
-            return request.data.message;
+        try {
+            let request = await client.post("/signUp" ,{
+                name:name,
+                username:username,
+                password:password,
+            });
+            if(request.status === httpStatus.CREATED){
+                return request.data.message;
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+            throw error;
         }
     }
 
     const handleLogIn = async(username,password)=>{
-        let request = await client.post("/login" , {
-            username:username,
-            password:password,
-        });
-        if(request.status == httpStatus.OK){
-            localStorage.setItem("token",request.data.token);
-            router("/home")
+        try {
+            let request = await client.post("/login" , {
+                username:username,
+                password:password,
+            });
+            if(request.status === httpStatus.OK){
+                localStorage.setItem("token",request.data.token);
+                router("/home");
+                return request.data;
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            throw error;
         }
     }
 
@@ -76,3 +87,5 @@ export const AuthProvider = ({children}) => {
 AuthProvider.propTypes = {
     children: PropTypes.node.isRequired
 };
+
+export { AuthProvider };

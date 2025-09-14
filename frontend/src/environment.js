@@ -1,3 +1,8 @@
-const server = 'https://vcbackend-cx24.onrender.com';
+const server = {
+    prod: 'https://vcbackend-cx24.onrender.com',
+    dev: 'http://localhost:3000'
+};
 
-export default server;
+const current = window.location.hostname === 'localhost' ? server.dev : server.prod;
+
+export default current;

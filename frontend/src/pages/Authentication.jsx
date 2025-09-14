@@ -38,26 +38,41 @@ export default function Authentication() {
 
     let handleAuth = async () => {
         try {
+            setError(""); // Clear previous errors
+            
             if (formState === 0) {
-                let result = await handleLogIn(username, password)
-
-
-            }
-            if (formState === 1) {
+                // Login
+                if (!username || !password) {
+                    setError("Please fill in all fields");
+                    return;
+                }
+                
+                await handleLogIn(username, password);
+                // handleLogIn should navigate to /home on success, so we don't need to show message
+                
+            } else if (formState === 1) {
+                // Register
+                if (!name || !username || !password) {
+                    setError("Please fill in all fields");
+                    return;
+                }
+                
                 let result = await handleRegister(name, username, password);
                 console.log(result);
+                setName("");
                 setUsername("");
+                setPassword("");
                 setMessage(typeof result === "object" && result !== null ? result.message : result);
                 setOpen(true);
-                setError("")
-                setFormState(0)
-                setPassword("")
+                setFormState(0); // Switch back to login after successful registration
             }
         } catch (err) {
-
             console.log(err);
-            let message = (err.response && err.response.data && err.response.data.message) ? err.response.data.message : String(err);
-            setError(message);
+            let errorMessage = (err.response && err.response.data && err.response.data.message) 
+                ? err.response.data.message 
+                : String(err);
+            setError(errorMessage);
+            setOpen(false); // Don't show success message on error
         }
     }
 
@@ -162,6 +177,7 @@ export default function Authentication() {
             <Snackbar
                 open={open}
                 autoHideDuration={4000}
+                onClose={() => setOpen(false)}
                 message={typeof message === "object" && message !== null ? message.message : message}
             />
 
