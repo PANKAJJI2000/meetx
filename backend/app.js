@@ -1,7 +1,8 @@
 import express from "express";
 import {createServer} from "node:http";
+import path from "path";
+import { fileURLToPath } from 'url';
 
-import { Server } from "socket.io";
 
 import mongoose from "mongoose";
 import cors from "cors";
@@ -11,6 +12,10 @@ import userRouter from './src/routes/users.routes.js';
 
 const app  = express();
 app.set("port",(process.env.PORT || 3000));
+
+// Get directory name for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const server = createServer(app);
 const io = connectToSocket(server);
@@ -37,8 +42,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// Add root route handler
-app.get("/", (req, res) => {
+// Serve static files from frontend build (only in production)
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+}
+
+// API routes
+app.get("/api", (req, res) => {
     res.status(200).json({
         message: "Desi Talks API is running successfully!",
         version: "1.0.0",
@@ -58,26 +68,28 @@ app.get("/api/test", (req, res) => {
     res.json({ message: "API is working!", timestamp: new Date().toISOString() });
 });
 
+// Serve frontend for all non-API routes (only in production)
+if (process.env.NODE_ENV === 'production') {
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, "/frontend/build/app.html"));
+    });
+} else {
+    // In development, show API info for root route
+    app.get("/", (req, res) => {
+        res.status(200).json({
+            message: "Desi Talks API is running successfully!",
+            version: "1.0.0",
+            endpoints: {
+                users: "/api/v1/users"
+            }
+        });
+    });
+}
+
 // Add error handling middleware (moved after routes)
 app.use((err, req, res, next) => {
     console.error('Error:', err.stack);
     res.status(500).json({ message: "Something went wrong!", error: err.message });
-});
-
-// Handle 404 for API routes (moved after routes)
-app.use("/api/*", (req, res) => {
-    console.log(`API 404: ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ message: "API endpoint not found" });
-});
-
-// Add a catch-all route for debugging (moved to end)
-app.use("*", (req, res) => {
-    console.log(`Unmatched route: ${req.method} ${req.originalUrl}`);
-    res.status(404).json({ 
-        message: "Route not found",
-        path: req.originalUrl,
-        method: req.method
-    });
 });
 
 //server starting and database connection
@@ -91,6 +103,22 @@ const start = async () => {
     }
     
     server.listen(app.get("port"), () => {
+        console.log(`Server is running on port ${app.get("port")}`);
+        console.log(`API available at: http://localhost:${app.get("port")}/api/v1/users`);
+        
+        // Log registered routes for debugging
+        console.log('\nRegistered routes:');
+        app._router.stack.forEach(function(r){
+            if (r.route && r.route.path){
+                console.log(`${Object.keys(r.route.methods).join(',').toUpperCase()} ${r.route.path}`);
+            } else if (r.name === 'router') {
+                console.log(`Router middleware at ${r.regexp}`);
+            }
+        });
+    });
+}
+
+start();
         console.log(`Server is running on port ${app.get("port")}`);
         console.log(`API available at: http://localhost:${app.get("port")}/api/v1/users`);
         
