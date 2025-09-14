@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 
 // Serve static files from frontend build (only in production)
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
 }
 
 // API routes
@@ -71,7 +71,7 @@ app.get("/api/test", (req, res) => {
 // Serve frontend for all non-API routes (only in production)
 if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
     });
 } else {
     // In development, show API info for root route
