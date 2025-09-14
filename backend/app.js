@@ -71,7 +71,7 @@ app.get("/api/test", (req, res) => {
 // Serve frontend for all non-API routes (only in production)
 if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+        res.sendFile(path.join(__dirname, '../frontend/index.html'));
     });
 } else {
     // In development, show API info for root route
