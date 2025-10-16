@@ -8,7 +8,7 @@ import server from "../environment";
 export const AuthContext = createContext({});
 
 const client = axios.create({
-    baseURL: `${server.prod}/api/v1/users`,
+    baseURL: `${server_url}/api/v1/users`,
     timeout: 10000, // 10 second timeout
     headers: {
         'Content-Type': 'application/json'
